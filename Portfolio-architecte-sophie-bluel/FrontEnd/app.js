@@ -38,15 +38,17 @@ document.querySelectorAll(".js-modal").forEach(a=> {
     for(let i = 0; i<PhotoModal.length; i++){
     const article = PhotoModal[i];
 
+    const imgId = PhotoModal[i].id;
+    console.log(imgId);
     const sectionGallery = document.querySelector(".galleryModal");
     const articleElement = document.createElement("article");
     articleElement.classList.add("photosRealisation");
-    articleElement.dataset.id = [i];
+    articleElement.dataset.id = imgId;
     
     const IconTrash = document.createElement("icon");
     IconTrash.classList.add("fa-regular", "fa-trash-can","fa-sm");
     IconTrash.setAttribute('id',article.id)
-    IconTrash.addEventListener("click", deletework);
+    IconTrash.addEventListener("click", deletework(imgId));
 
     
     const IconArrow = document.createElement("icon");
@@ -103,7 +105,8 @@ Accept: "*/*",
 "content-type": "application/json",
 }
    })
-   .then(response =>{
+   .then(response =>{ 
+    console.log(response);
     if(response.ok){
         console.log("ressource succes")
     } else{

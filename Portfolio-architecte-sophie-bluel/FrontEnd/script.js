@@ -3,6 +3,7 @@ async function callApi(){
     const url = "datas.json"
     const fetcher = await fetch ("http://localhost:5678/api/works")
     const json = await fetcher.json()
+    console.log(json)
     for(let i = 0; i<json.length; i++){
     const project = json[i];
     const gallery = document.querySelector(".gallery");
