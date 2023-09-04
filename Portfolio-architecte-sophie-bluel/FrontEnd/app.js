@@ -29,6 +29,7 @@ document.querySelectorAll(".js-modal").forEach(a=> {
 })
 
 
+
    async function generationModal(){
     
     
@@ -45,10 +46,8 @@ document.querySelectorAll(".js-modal").forEach(a=> {
     const IconTrash = document.createElement("icon");
     IconTrash.classList.add("fa-regular", "fa-trash-can","fa-sm");
     IconTrash.setAttribute('id',article.id)
-    IconTrash.addEventListener("click", function(){
-        deletework()
+    IconTrash.addEventListener("click", deletework);
 
-    })
     
     const IconArrow = document.createElement("icon");
     IconArrow.classList.add("fa-solid", "fa-arrows-up-down-left-right","fa-am");
@@ -92,13 +91,14 @@ document.querySelectorAll(".js-modal").forEach(a=> {
     })
    })
 
-   
-function deletework() {
 
-    fetch('http://localhost:5678/api/works/${id}', {
+
+function deletework(id) {
+const token = sessionStorage.getItem("token");
+    fetch(`http://localhost:5678/api/works/${id}`, {
     method: "DELETE",
 headers: {
-Authorization: 'Bearer ${token}',
+Authorization: `Bearer ${token}`,
 Accept: "*/*",
 "content-type": "application/json",
 }
@@ -114,24 +114,24 @@ Accept: "*/*",
 }
 
 
-async function addProject() {
-    const selectedImg = imgUpload.files[0];
-    const category = document.querySelector('select[name="category"]');
-    const categoryOption = parseInt(category.value);
-    console.log(categoryOption);
-    //Liaison avec html pour les élts du formulaire :
-    const formElement = document.querySelector("#form");
-    const formData = new FormData();
-    formData.append ("title", title.value); 
-    formData.append("image", selectedImg);
-    formData.append ("category", categoryOption);
+let valide = document.getElementById("valid")
+
+valide.addEventListener("click",  async (e) => {
+    e.preventDefault()
+    const token = sessionStorage.getItem("token");
+    var img = document.getElementById('uploadImg');
+    var title = document.getElementById("title");
+    var categorie = document.getElementById("choseCat");
+    const formData = new FormData
+    formData.append("image", img.files[0]);
+    formData.append("title", title.value);
+    formData.append("category", categorie.value)
     console.log(formData) ;
-    const response = await fetch("http://localhost:5678/api/works", { 
+   await fetch("http://localhost:5678/api/works", { 
     method: "POST",
     headers: {
     'accept': 'application/json',
-    'Authorization': 'Bearer ${userToken}',
-    'Content-Type': contentType,
+    'Authorization': `Bearer ${token}`,
     },
     body: formData
     });
@@ -140,7 +140,7 @@ async function addProject() {
     console.log("Projet envoyé"); 
 } else{
     console.log("erreur")
-}}
+}})
 
 
 function validationButton (){
@@ -157,3 +157,31 @@ console.log(valid)
 uploadImg.addEventListener("input", validationButton);
 title.addEventListener("input", validationButton);
 choseCat.addEventListener("input", validationButton);
+
+
+
+const inputFile = document.getElementById('uploadImg')
+
+inputFile.addEventListener('change', previewFile); 
+   function previewFile(){ 
+    const image = this.files[0]
+    console.log(image);
+    const reader = new FileReader();
+    reader.readAsDataURL(image);
+    reader.addEventListener('load', (event) => displayImage(event));
+}
+
+function displayImage(event) {
+    const figureElement = document.createElement("figure");
+    figureElement.id ="imageSelected"
+
+    const imageElement = document.createElement("img")
+    imageElement.src = event.target.result;
+    
+    figureElement.appendChild(imageElement);
+    document.querySelector(".divIcon").appendChild(figureElement);
+
+
+}
+
+
